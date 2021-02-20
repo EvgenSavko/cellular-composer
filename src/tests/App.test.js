@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import App from "../App";
-import Btn from "@Components/Btn/Btn";
+import Btn from "@Components/Button/Button";
 
 test("renders header title", () => {
   render(<App />);
-  const linkElement = screen.getByText(/cellular composer/i);
+  const linkElement = screen.getByText(/about us/i);
   expect(linkElement).toBeInTheDocument();
 });
 
