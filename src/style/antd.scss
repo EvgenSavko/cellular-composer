@@ -1,0 +1,5 @@
+@import "./antd.light";
+
+html[data-theme="dark"]{
+  @import "./antd.dark";
+} 

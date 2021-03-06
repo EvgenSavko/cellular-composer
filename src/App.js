@@ -1,17 +1,27 @@
 import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.scss";
 
-import Btn from "@Components/Btn/Btn";
+import "../src/style/antd.scss";
 
-function App() {
+import Login from "@Screens/LogIn";
+import Navbar from "@Components/Navbar/Navbar";
+
+const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Cellular Composer</h1>
-        <Btn title={"Test"} number={123} />
-      </header>
+      <Router>
+        <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/">
+            <Navbar />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
-}
+};
 
 export default App;
