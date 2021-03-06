@@ -3,7 +3,7 @@
     "target": "es2017",
     "allowSyntheticDefaultImports": false,
     "baseUrl": "./",
-    "paths": {"@Components/*": ["src/components/*"]}
+    "paths": {"@Components/*": ["src/components/*"], "@Screens/*": ["src/screens/*"]}
   },
   "exclude": ["node_modules"]
 }

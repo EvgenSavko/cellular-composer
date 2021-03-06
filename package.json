@@ -125,6 +125,7 @@
     "modulePaths": [],
     "moduleNameMapper": {
       "^@Components(.*)$": "<rootDir>/src/components$1",
+      "^@Screens(.*)$": "<rootDir>/src/screens$1",
       "^react-native$": "react-native-web",
       "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
     },
