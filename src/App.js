@@ -20,6 +20,7 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
+      <div className="portal-alert" id="portal-root"></div>
     </div>
   );
 };
