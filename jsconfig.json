@@ -3,7 +3,19 @@
     "target": "es2017",
     "allowSyntheticDefaultImports": false,
     "baseUrl": "./",
-    "paths": {"@Components/*": ["src/components/*"], "@Screens/*": ["src/screens/*"]}
+    "paths": {
+      "@Components/*": [
+        "src/components/*"
+      ],
+      "@Screens/*": [
+        "src/screens/*"
+      ],
+      "@Shared/*": [
+        "src/shared/*"
+      ]
+    }
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -326,6 +326,7 @@ module.exports = function (webpackEnv) {
       alias: {
         "@Components": path.resolve("src/components/"),
         "@Screens": path.resolve("src/screens/"),
+        "@Shared": path.resolve("src/shared/"),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         "react-native": "react-native-web",
