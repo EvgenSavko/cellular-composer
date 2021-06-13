@@ -1,0 +1,33 @@
+.login_page {
+
+    .container {
+        margin-top: 180px;
+        width: 100%;
+        max-width: 554px;
+        min-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ant-btn-primary {
+        margin-right: 10px;
+    }
+
+    .ant-form-item-control-input-content {
+        text-align: end;
+    }
+
+    .ant-form-item-control {
+        max-width: 472px;
+    }
+
+    .ant-form-item {
+        justify-content: flex-end;
+    }
+
+    .ant-radio-group {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+}
