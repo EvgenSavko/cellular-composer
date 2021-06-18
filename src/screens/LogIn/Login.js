@@ -7,7 +7,9 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
 
 import firebase from '@Shared/firebase/firebase'
-import ModalError from '@Components/ModalError/ModalError'
+import { useAuth } from '@Shared/context/AuthContext'
+import ModalError from '@Components/ModalError'
+import LoadingAlert from '@Components/LoadingAlert'
 
 const SIGN_UP = 'Sign up'
 const SIGN_IN = 'Sign in'
@@ -19,7 +21,7 @@ const optionsTypes = [
 
 const Login = () => {
   const history = useHistory()
-
+  const { currentUser, setCurrentUser, loadingUser } = useAuth()
   const [createUserWithEmailAndPassword, userCreat, loadingCreat, errorCreate] = useCreateUserWithEmailAndPassword(
     firebase.auth()
   )
@@ -30,8 +32,17 @@ const Login = () => {
   const formRef = useRef(null)
 
   useEffect(() => {
-    if (userIN || userCreat) history.push('/')
+    if (userIN || userCreat) {
+      setCurrentUser(userIN || userCreat)
+      history.push('/')
+    }
   }, [userCreat, userIN])
+
+  useEffect(() => {
+    if (currentUser) {
+      history.push('/')
+    }
+  }, [currentUser])
 
   const onFinish = ({ email, password }) => {
     option === SIGN_UP && createUserWithEmailAndPassword(email, password)
@@ -59,6 +70,12 @@ const Login = () => {
 
   return (
     <div className="login_page">
+      {loadingUser && (
+        <LoadingAlert
+          message="Authorization check..."
+          description="Wait for the user authorization check in the system."
+        />
+      )}
       {renderModalError()}
       <div className="container">
         <Radio.Group

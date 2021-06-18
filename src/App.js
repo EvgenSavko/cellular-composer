@@ -1,28 +1,31 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import "./App.scss";
+import React from 'react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import './App.scss'
 
-import "../src/style/antd.scss";
+import '../src/style/antd.scss'
 
-import Login from "@Screens/LogIn";
-import Navbar from "@Components/Navbar/Navbar";
+import Login from '@Screens/LogIn'
+import { AuthProvider } from '@Shared/context/AuthContext'
+import Navbar from '@Components/Navbar'
+import PrivateRoute from '@Components/PrivateRoute'
 
 const App = () => {
   return (
-    <div className="App">
-      <Router>
-        <Switch>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/">
-            <Navbar />
-          </Route>
-        </Switch>
-      </Router>
-      <div className="portal-alert" id="portal-root"></div>
-    </div>
-  );
-};
+    <AuthProvider>
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <PrivateRoute path="/" component={Navbar} />
+          </Switch>
+        </Router>
+        <div className="portal-alert" id="portal-root"></div>
+        <div className="portal-loading-user" id="portal-loading-user"></div>
+      </div>
+    </AuthProvider>
+  )
+}
 
-export default App;
+export default App
