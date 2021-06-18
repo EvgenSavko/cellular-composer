@@ -1,61 +1,75 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 
-import { Form, Input, Button, Radio } from "antd";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Form, Input, Button, Radio } from 'antd'
+import { Spin } from 'antd'
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
 
-import firebase from "@Shared/firebase/firebase";
-import ModalError from "@Components/ModalError/ModalError";
+import firebase from '@Shared/firebase/firebase'
+import ModalError from '@Components/ModalError/ModalError'
 
-const optionsSubmit = [
-  { label: "Sign in", value: "Sign in" },
-  { label: "Sign up", value: "Sign up" },
-];
+const SIGN_UP = 'Sign up'
+const SIGN_IN = 'Sign in'
+
+const optionsTypes = [
+  { label: 'Sign in', value: SIGN_IN },
+  { label: 'Sign up', value: SIGN_UP },
+]
 
 const Login = () => {
-  const [
-    createUserWithEmailAndPassword,
-    user,
-    loading,
-    errorCreate,
-  ] = useCreateUserWithEmailAndPassword(firebase.auth());
+  const history = useHistory()
 
-  const [option, setOption] = useState(optionsSubmit[1].value);
-  const [error, setError] = useState(null);
-  const formRef = useRef(null);
+  const [createUserWithEmailAndPassword, userCreat, loadingCreat, errorCreate] = useCreateUserWithEmailAndPassword(
+    firebase.auth()
+  )
+  const [signInWithEmailAndPassword, userIN, loading, errorIn] = useSignInWithEmailAndPassword(firebase.auth())
+
+  const [option, setOption] = useState(optionsTypes[0].value)
+  const [error, setError] = useState(null)
+  const formRef = useRef(null)
+
+  useEffect(() => {
+    if (userIN || userCreat) history.push('/')
+  }, [userCreat, userIN])
 
   const onFinish = ({ email, password }) => {
-    console.log("Success:", email, password);
-    createUserWithEmailAndPassword(email, password);
-    setError(null);
-  };
+    option === SIGN_UP && createUserWithEmailAndPassword(email, password)
+    option === SIGN_IN && signInWithEmailAndPassword(email, password)
+    setError(null)
+  }
 
   const onFinishFailed = () => {
-    setError({ name: "Error", message: `Please fill all required inputs` });
-  };
+    setError({ name: 'Error', message: `Please fill all required inputs` })
+  }
 
   const onReset = () => {
-    formRef?.current.resetFields();
-    setError(null);
-  };
+    formRef?.current.resetFields()
+    setError(null)
+  }
+
+  const renderModalError = useCallback(() => {
+    let errorProps = null
+    if (error) errorProps = error
+    if (errorCreate) errorProps = errorCreate
+    if (errorIn) errorProps = errorIn
+
+    return errorProps && <ModalError error={errorProps} />
+  }, [error, errorIn, errorCreate])
 
   return (
     <div className="login_page">
-      {error && <ModalError error={error} />}
+      {renderModalError()}
       <div className="container">
         <Radio.Group
-          options={optionsSubmit}
+          options={optionsTypes}
           onChange={(e) => setOption(e.target.value)}
           value={option}
           optionType="button"
           buttonStyle="solid"
         />
 
-        <Form
-          name="auth"
-          ref={formRef}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
+        <Form name="auth" ref={formRef} onFinish={onFinish} onFinishFailed={onFinishFailed}>
           <Form.Item
             label="Email"
             name="email"
@@ -63,8 +77,12 @@ const Login = () => {
             tooltip="Will be your username!"
             rules={[
               {
+                type: 'email',
+                message: 'The input is not valid E-mail!',
+              },
+              {
                 required: true,
-                message: "Please input your email!",
+                message: 'Please input your email!',
               },
             ]}
           >
@@ -77,16 +95,40 @@ const Login = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your password!",
+                message: 'Please input your password!',
               },
             ]}
           >
             <Input.Password />
           </Form.Item>
 
+          {option === SIGN_UP && (
+            <Form.Item
+              label="Confirm Password"
+              name="confirm_password"
+              dependencies={['password']}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your Confirm Password!',
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve()
+                    }
+                    return Promise.reject(new Error('The two passwords that you entered do not match!'))
+                  },
+                }),
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Submit
+              {(loading || loadingCreat) && <Spin size="small" />}
+              <span className="submit-btn-text">Submit</span>
             </Button>
             <Button htmlType="button" onClick={onReset}>
               Reset
@@ -95,7 +137,7 @@ const Login = () => {
         </Form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

@@ -7,13 +7,23 @@ import Portal from "@Components/Portal/Portal";
 
 const ModalError = ({ error }) => (
   <Portal id="portal-root">
-    <Alert
-      message={error?.name || "Error"}
-      description={error?.message}
-      type="error"
-      closable
-      showIcon
-    />
+    {typeof error === "string" ? (
+      <Alert
+        message={"Error"}
+        description={error}
+        type="error"
+        closable
+        showIcon
+      />
+    ) : (
+      <Alert
+        message={error?.name || "Error"}
+        description={error?.message}
+        type="error"
+        closable
+        showIcon
+      />
+    )}
   </Portal>
 );
 

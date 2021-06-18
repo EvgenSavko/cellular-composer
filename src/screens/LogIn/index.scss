@@ -18,7 +18,7 @@
     }
 
     .ant-form-item-control {
-        max-width: 472px;
+        max-width: 419px;
     }
 
     .ant-form-item {
@@ -29,5 +29,15 @@
         display: flex;
         justify-content: flex-end;
         margin-bottom: 20px;
+    }
+
+    .ant-spin-dot-spin{
+        i {
+            background-color: white;
+        }
+    }
+
+    .submit-btn-text{
+        margin-left: 5px;
     }
 }
