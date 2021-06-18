@@ -1,36 +1,19 @@
 import React from "react";
-import PropTypes from "prop-types";
 
-import { Alert, Spin, Space } from "antd";
+import { Spin, Space } from "antd";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 import firebase from "@Shared/firebase/firebase";
 import Button from "@Components/Button/Button";
-import Portal from "@Components/Portal/Portal";
+import ModalError from "@Components/ModalError/ModalError";
 
 const querySchools = firebase.firestore().collection("school");
 
-const ModalError = ({ error }) => (
-  <Portal id="portal-root">
-    <Alert
-      message={error?.name || "Error"}
-      description={error?.message}
-      type="error"
-      closable
-      showIcon
-    />
-  </Portal>
-);
-
-ModalError.propTypes = {
-  error: PropTypes.shape({
-    message: PropTypes.string,
-    name: PropTypes.string,
-  }),
-};
-
 const Home = () => {
+  const [user, loadingUser, errorUser] = useAuthState(firebase.auth());
   const [value, loading, error] = useCollectionData(querySchools);
+  console.log("user from firebase", user);
 
   return (
     <div>
