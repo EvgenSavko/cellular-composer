@@ -1,19 +1,18 @@
-import React from "react";
+import React from 'react'
 
-import { Spin, Space } from "antd";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { Spin, Space } from 'antd'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
 
-import firebase from "@Shared/firebase/firebase";
-import Button from "@Components/Button/Button";
-import ModalError from "@Components/ModalError/ModalError";
+import firebase from '@Shared/firebase/firebase'
+import { useAuth } from '@Shared/context/AuthContext'
+import Button from '@Components/Button/Button'
+import ModalError from '@Components/ModalError'
 
-const querySchools = firebase.firestore().collection("school");
+const querySchools = firebase.firestore().collection('school')
 
 const Home = () => {
-  const [user, loadingUser, errorUser] = useAuthState(firebase.auth());
-  const [value, loading, error] = useCollectionData(querySchools);
-  console.log("user from firebase", user);
+  const [valueCollection, loading, error] = useCollectionData(querySchools)
+  const { currentUser } = useAuth()
 
   return (
     <div>
@@ -28,11 +27,11 @@ const Home = () => {
       <div className="test-color">
         <Button title="test" type="primary" />
       </div>
-      {value?.map((item) => (
+      {valueCollection?.map((item) => (
         <div key={item.id}>{item.name}</div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
