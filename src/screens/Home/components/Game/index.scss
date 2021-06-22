@@ -1,0 +1,18 @@
+.game {
+
+    .title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .init-game {
+        .ant-form-item-label {
+            min-width: 149px;
+        }
+
+        &__input {
+            padding: 5px 0;
+        }
+    }
+}
