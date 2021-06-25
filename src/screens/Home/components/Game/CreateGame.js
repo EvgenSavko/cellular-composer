@@ -11,11 +11,12 @@ const CreateGame = ({ gameName, setGameName, setError, queryGames }) => {
   useEffect(() => {
     if (gameName.name !== 'default' && gameName.create) {
       const { email, uid } = currentUser
-      const name = email.substring(0, email.indexOf('@'))
-      queryGames.add({
+      const name = email?.substring(0, email.indexOf('@'))
+      queryGames.doc(uid).set({
         name: name,
         id: 1,
         uid: uid,
+        game_creator: true,
       })
       setGameName({ name: gameName.name, connect: false, create: false })
     }
@@ -38,7 +39,6 @@ const CreateGame = ({ gameName, setGameName, setError, queryGames }) => {
         <Form.Item
           label="Create game"
           name="game_name"
-          required
           tooltip="Will be your game name!"
           rules={[
             {
@@ -67,6 +67,7 @@ CreateGame.propTypes = {
   }),
   queryGames: PropTypes.shape({
     add: PropTypes.func,
+    doc: PropTypes.func,
   }),
   setError: PropTypes.func,
   setGameName: PropTypes.func,
