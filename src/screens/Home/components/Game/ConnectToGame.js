@@ -23,7 +23,6 @@ const ConnectToGame = ({ gameName, setGameName, setError, queryGames }) => {
   }, [gameName.name, gameName.connect])
 
   const onFinish = ({ game_name }) => {
-    console.log('submit game_name:', game_name)
     setGameName({ name: game_name, connect: true, create: false })
     formRef?.current.resetFields()
     setError(null)

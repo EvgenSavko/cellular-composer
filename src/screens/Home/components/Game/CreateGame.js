@@ -1,32 +1,46 @@
 import React, { useRef, useEffect, memo } from 'react'
 import PropTypes from 'prop-types'
 
+import firebase from '@Shared/firebase/firebase'
+
 import { Form, Input, Button } from 'antd'
 import { useAuth } from '@Shared/context/AuthContext'
 
-const CreateGame = ({ gameName, setGameName, setError, queryGames }) => {
+const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], setGameName, setError, queryGames }) => {
   const { currentUser } = useAuth()
   const formRef = useRef(null)
 
   useEffect(() => {
     if (gameName.name !== 'default' && gameName.create) {
       const { email, uid } = currentUser
-      const name = email?.substring(0, email.indexOf('@'))
-      queryGames.doc(uid).set({
-        name: name,
-        id: 1,
-        uid: uid,
-        game_creator: true,
-      })
-      setGameName({ name: gameName.name, connect: false, create: false })
+      const newName = email?.substring(0, email.indexOf('@'))
+
+      const isExist = listOfGamesCollection.some(({ name }) => name === gameName.name)
+      if (!isExist) {
+        queryGames.doc(uid).set({
+          name: newName,
+          id: 1,
+          uid: uid,
+          game_creator: true,
+        })
+        setGameName({ name: gameName.name, connect: false, create: false })
+        queryListOfGames.doc(gameName.name).set({
+          name: gameName.name,
+          creator_iud: uid,
+          time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
+        })
+      }
     }
   }, [gameName.name, gameName.create])
 
   const onFinish = ({ game_name }) => {
-    console.log('submit game_name:', game_name)
-    setGameName({ name: game_name, connect: false, create: true })
+    const isExist = listOfGamesCollection.some(({ name }) => name === game_name)
+    if (!isExist) {
+      setGameName({ name: game_name, connect: false, create: true })
+      setError(null)
+    }
+    isExist && setError({ name: 'Error', message: `This name is already taken.` })
     formRef?.current.resetFields()
-    setError(null)
   }
 
   const onFinishFailed = () => {
@@ -40,9 +54,11 @@ const CreateGame = ({ gameName, setGameName, setError, queryGames }) => {
           label="Create game"
           name="game_name"
           tooltip="Will be your game name!"
+          required
           rules={[
             {
-              message: 'Please enter game`s name',
+              required: true,
+              message: 'Please enter game`s name.',
             },
           ]}
         >
@@ -65,12 +81,17 @@ CreateGame.propTypes = {
     connect: PropTypes.bool,
     create: PropTypes.bool,
   }),
+  queryListOfGames: PropTypes.shape({
+    add: PropTypes.func,
+    doc: PropTypes.func,
+  }),
   queryGames: PropTypes.shape({
     add: PropTypes.func,
     doc: PropTypes.func,
   }),
   setError: PropTypes.func,
   setGameName: PropTypes.func,
+  listOfGamesCollection: PropTypes.array,
 }
 
 export default memo(CreateGame)
