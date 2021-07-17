@@ -22,6 +22,9 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
           id: 1,
           uid: uid,
           game_creator: true,
+          positionX: null,
+          positionY: null,
+          time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
         })
         setGameName({ name: gameName.name, connect: false, create: false })
         queryListOfGames.doc(gameName.name).set({
