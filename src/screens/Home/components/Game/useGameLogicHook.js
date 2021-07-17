@@ -47,7 +47,7 @@ const useGameLogicHook = () => {
     return errorProps && <ModalError error={errorProps} />
   }, [error, errorCollection, errorListGame])
 
-  console.log('gamesCollection:', gamesCollection)
+  // console.log('gamesCollection:', gamesCollection)
 
   const logOutOfGame = async () => {
     const { uid } = currentUser

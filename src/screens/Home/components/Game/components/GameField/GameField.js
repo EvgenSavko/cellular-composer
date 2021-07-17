@@ -1,8 +1,8 @@
-import React, { useEffect, memo, useState, useCallback } from 'react'
-import ReactDOM from 'react-dom'
+import React, { useEffect, memo, useState, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import { useAuth } from '@Shared/context/AuthContext'
+import { UP_KEY, DOWN_KEY, LEFT_KEY, RIGHT_KEY } from '@Shared/constants/constants'
 import LoadingAlert from '@Components/LoadingAlert'
 
 const indexToColor = {
@@ -40,27 +40,54 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
   } = useAuth()
   const [state, setState] = useState(0)
   const currentPlayer = gamesCollection?.find((player) => player.uid === uid)
-
+  const keys = useRef([])
   //TODO  implement handling of pressing two buttons
 
-  const handleUserKeyPress = useCallback(
+  const handleUserKeyDown = useCallback(
     (event) => {
-      console.log('keypress')
-      const key = event.key // keydown: "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
-      console.log(key)
+      console.log('keypress Down')
+      const key = event.which
+
+      if (!keys.current.includes(key)) keys.current.push(key)
 
       if (currentPlayer) {
         const position = {
           x: currentPlayer.positionX,
           y: currentPlayer.positionY,
         }
-        if (key === 'w') position.y += 10
-        if (key === 'd') position.x += 10
-        if (key === 's') position.y -= 10
-        if (key === 'a') position.x -= 10
-        else setState(state + 1)
-        console.log('currentPlayer', currentPlayer)
-        console.log('new position', position)
+
+        if (keys.current.length === 2) {
+          console.log('DOUBLE PRESS')
+          if (keys.current.includes(UP_KEY) && keys.current.includes(RIGHT_KEY)) {
+            position.y += 30
+            position.x += 30
+          }
+          if (keys.current.includes(UP_KEY) && keys.current.includes(LEFT_KEY)) {
+            position.y += 30
+            position.x -= 30
+          }
+          if (keys.current.includes(RIGHT_KEY) && keys.current.includes(DOWN_KEY)) {
+            position.y -= 30
+            position.x += 30
+          }
+          if (keys.current.includes(LEFT_KEY) && keys.current.includes(DOWN_KEY)) {
+            position.y -= 30
+            position.x -= 30
+          }
+
+          // Wrong pressing
+          if (keys.current.includes(LEFT_KEY) && keys.current.includes(RIGHT_KEY)) {
+            setState(state + 1)
+          }
+        } else if (keys.current.length === 1) {
+          if (keys.current.includes(UP_KEY)) position.y += 10
+          if (keys.current.includes(DOWN_KEY)) position.y -= 10
+          if (keys.current.includes(RIGHT_KEY)) position.x += 10
+          if (keys.current.includes(LEFT_KEY)) position.x -= 10
+        }
+
+        const availableControlsButtons = [UP_KEY, DOWN_KEY, RIGHT_KEY, LEFT_KEY]
+        if (!availableControlsButtons.includes(key)) setState(state + 1)
 
         queryGames.doc(uid).update({
           positionX: position.x,
@@ -71,18 +98,27 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
     [currentPlayer?.positionX, currentPlayer?.positionY, state]
   )
 
+  const handleUserKeyUp = useCallback(() => {
+    console.log('keypress UP')
+    console.log(' keys.current', keys.current)
+    keys.current = []
+  }, [])
+
   useEffect(() => {
-    document.addEventListener('keypress', handleUserKeyPress, {
+    document.addEventListener('keydown', handleUserKeyDown, {
       once: true,
       // passive: true,
       // capture: true,
     })
-
+    document.addEventListener('keyup', handleUserKeyUp, {
+      once: true,
+    })
     return () => {
       console.log('unmount')
-      document.removeEventListener('keypress', handleUserKeyPress)
+      document.removeEventListener('keydown', handleUserKeyDown)
+      document.removeEventListener('keyup', handleUserKeyUp)
     }
-  }, [handleUserKeyPress])
+  }, [handleUserKeyDown, handleUserKeyUp])
 
   return (
     <div className="game-field">
