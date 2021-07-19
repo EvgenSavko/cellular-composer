@@ -38,119 +38,59 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
   const {
     currentUser: { uid },
   } = useAuth()
-  const [state, setState] = useState(0)
   const currentPlayer = gamesCollection?.find((player) => player.uid === uid)
-  const keys = {}
-  //TODO  implement handling of pressing two buttons
 
-  // const handleUserKeyDown = useCallback(
-  //   (event) => {
-  //     console.log('keypress Down')
-  //     const key = event.which
+  const position = useRef({
+    x: 0,
+    y: 0,
+  })
 
-  //     if (!keys.current.includes(key)) keys.current.push(key)
-
-  //     if (currentPlayer) {
-  //       const position = {
-  //         x: currentPlayer.positionX,
-  //         y: currentPlayer.positionY,
-  //       }
-
-  //       if (keys.current.length === 2) {
-  //         console.log('DOUBLE PRESS')
-  //         if (keys.current.includes(UP_KEY) && keys.current.includes(RIGHT_KEY)) {
-  //           position.y += 30
-  //           position.x += 30
-  //         }
-  //         if (keys.current.includes(UP_KEY) && keys.current.includes(LEFT_KEY)) {
-  //           position.y += 30
-  //           position.x -= 30
-  //         }
-  //         if (keys.current.includes(RIGHT_KEY) && keys.current.includes(DOWN_KEY)) {
-  //           position.y -= 30
-  //           position.x += 30
-  //         }
-  //         if (keys.current.includes(LEFT_KEY) && keys.current.includes(DOWN_KEY)) {
-  //           position.y -= 30
-  //           position.x -= 30
-  //         }
-
-  //         // Wrong pressing
-  //         if (keys.current.includes(LEFT_KEY) && keys.current.includes(RIGHT_KEY)) {
-  //           setState(state + 1)
-  //         }
-  //       } else if (keys.current.length === 1) {
-  //         if (keys.current.includes(UP_KEY)) position.y += 10
-  //         if (keys.current.includes(DOWN_KEY)) position.y -= 10
-  //         if (keys.current.includes(RIGHT_KEY)) position.x += 10
-  //         if (keys.current.includes(LEFT_KEY)) position.x -= 10
-  //       }
-
-  //       const availableControlsButtons = [UP_KEY, DOWN_KEY, RIGHT_KEY, LEFT_KEY]
-  //       if (!availableControlsButtons.includes(key)) setState(state + 1)
-
-  //       queryGames.doc(uid).update({
-  //         positionX: position.x,
-  //         positionY: position.y,
-  //       })
-  //     }
-  //   },
-  //   [currentPlayer?.positionX, currentPlayer?.positionY, state]
-  // )
-
-  // const handleUserKeyUp = useCallback(() => {
-  //   console.log('keypress UP')
-  //   console.log(' keys.current', keys.current)
-  //   keys.current = []
-  // }, [])
-
-  // const [position, setPosition] = useState({ y: 0, x: 0 })
+  const keys = useRef({})
 
   function action() {
-    const position = {
-      x: 0,
-      y: 0,
-    }
     return setInterval(function () {
-      console.log(' keys.current', keys)
-      if (keys[UP_KEY]) {
-        position.y += 10
+      if (keys.current[UP_KEY]) {
+        position.current.y += 10
       }
-      if (keys[DOWN_KEY]) {
-        position.y -= 10
+      if (keys.current[DOWN_KEY]) {
+        position.current.y -= 10
       }
-      if (keys[RIGHT_KEY]) {
-        position.x += 10
+      if (keys.current[RIGHT_KEY]) {
+        position.current.x += 10
       }
-      if (keys[LEFT_KEY]) {
-        position.x -= 10
+      if (keys.current[LEFT_KEY]) {
+        position.current.x -= 10
       }
-      if (currentPlayer?.positionX !== position.x && currentPlayer?.positionY !== position.y) {
+      if (currentPlayer?.positionX !== position.current.x || currentPlayer?.positionY !== position.current.y) {
         console.log('SUBMIT11')
         queryGames.doc(uid).update({
-          positionX: position.x,
-          positionY: position.y,
+          positionX: position.current.x,
+          positionY: position.current.y,
         })
       }
-    }, 500)
+    }, 50)
   }
-  console.log('currentPlayer?.positionX', currentPlayer?.positionX)
+
+  const handlePressDown = (e) => {
+    console.log(123)
+    keys.current[e.keyCode] = true
+  }
+  const handlePressUp = (e) => {
+    keys.current[e.keyCode] = false
+  }
+
   useEffect(() => {
-    document.addEventListener('keydown', (e) => {
-      console.log(123)
-      keys[e.keyCode] = true
-    })
-    document.addEventListener('keyup', (e) => {
-      keys[e.keyCode] = false
-    })
+    console.log(222)
+    document.addEventListener('keydown', handlePressDown)
+    document.addEventListener('keyup', handlePressUp)
 
     let interval
     if (currentPlayer) interval = action()
 
     return () => {
       console.log('unmount')
-      document.removeEventListener('keydown', () => {})
-      document.removeEventListener('keyup', () => {})
+      document.removeEventListener('keydown', handlePressDown)
+      document.removeEventListener('keyup', handlePressUp)
       clearInterval(interval)
     }
   }, [currentPlayer])
