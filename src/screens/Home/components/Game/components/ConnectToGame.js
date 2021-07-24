@@ -14,7 +14,7 @@ const ConnectToGame = ({ gameName, setGameName, setError, queryGames }) => {
     if (gameName.name !== 'default' && gameName.connect) {
       const { email, uid } = currentUser
       const name = email?.substring(0, email.indexOf('@'))
-      queryGames.doc(uid).set({
+      queryGames?.doc(uid).set({
         name: name,
         id: 2,
         uid: uid,
