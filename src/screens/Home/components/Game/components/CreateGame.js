@@ -17,11 +17,14 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
 
       const isExist = listOfGamesCollection.some(({ name }) => name === gameName.name)
       if (!isExist) {
-        queryGames.doc(uid).set({
+        queryGames?.doc(uid).set({
           name: newName,
           id: 1,
           uid: uid,
           game_creator: true,
+          positionX: null,
+          positionY: null,
+          time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
         })
         setGameName({ name: gameName.name, connect: false, create: false })
         queryListOfGames.doc(gameName.name).set({

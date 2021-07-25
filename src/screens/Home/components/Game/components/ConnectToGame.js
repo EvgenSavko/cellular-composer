@@ -2,6 +2,8 @@ import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { Form, Input, Button } from 'antd'
+
+import firebase from '@Shared/firebase/firebase'
 import { useAuth } from '@Shared/context/AuthContext'
 
 const ConnectToGame = ({ gameName, setGameName, setError, queryGames }) => {
@@ -12,11 +14,14 @@ const ConnectToGame = ({ gameName, setGameName, setError, queryGames }) => {
     if (gameName.name !== 'default' && gameName.connect) {
       const { email, uid } = currentUser
       const name = email?.substring(0, email.indexOf('@'))
-      queryGames.doc(uid).set({
+      queryGames?.doc(uid).set({
         name: name,
         id: 2,
         uid: uid,
         game_creator: false,
+        positionX: null,
+        positionY: null,
+        time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
       })
       setGameName({ name: gameName.name, connect: false, create: false })
     }
