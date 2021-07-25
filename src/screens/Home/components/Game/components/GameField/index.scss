@@ -1,0 +1,26 @@
+.game-field {
+    border: 1px solid #1890ff;
+    height: calc(100vh - 304px);
+    width: 100%;
+    position: relative;
+
+    .player {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+    }
+
+    .player--color-red {
+        background-color: red;
+    }
+
+    .player--color-green {
+        background-color: green;
+    }
+    .player--color-blue {
+        background-color: blue;
+    }
+    .player--color-black {
+        background-color: black;
+    }
+}
