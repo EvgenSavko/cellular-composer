@@ -13,7 +13,7 @@ const useGameLogicHook = () => {
   const { currentUser } = useAuth()
   const [error, setError] = useState(null)
   const [gameName, setGameName] = useState(initGame)
-  const queryGames = firebase.firestore().collection(gameName.name)
+  const queryGames = firebase.firestore().collection(gameName?.name)
   const [gamesCollection, loadingGame, errorCollection] = useCollectionData(queryGames.orderBy('time_creat', 'asc')) //desc and asc
   const amIGameCreator = !!gamesCollection?.find(({ game_creator, uid }) => game_creator && uid === currentUser?.uid)
   const startGame = useRef(false)
