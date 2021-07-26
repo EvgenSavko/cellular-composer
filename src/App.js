@@ -10,6 +10,7 @@ import Navbar from '@Components/Navbar'
 import PrivateRoute from '@Components/PrivateRoute'
 
 const App = () => {
+  console.log('%cRelease: 0.2.2', 'color: white; background: #212529; font-size: 32px')
   return (
     <AuthProvider>
       <div className="App">
