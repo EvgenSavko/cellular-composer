@@ -9,14 +9,17 @@ import { useAuth } from '@Shared/context/AuthContext'
 const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], setGameName, setError, queryGames }) => {
   const { currentUser } = useAuth()
   const formRef = useRef(null)
-
+  console.log('currentUser1', currentUser)
   useEffect(() => {
     if (gameName.name !== 'default' && gameName.create) {
       const { email, uid } = currentUser
+
       const newName = email?.substring(0, email.indexOf('@'))
 
       const isExist = listOfGamesCollection.some(({ name }) => name === gameName.name)
-      if (!isExist) {
+      if (!isExist && uid && newName) {
+        console.log('uid', uid)
+        console.log('newName', newName)
         queryGames?.doc(uid).set({
           name: newName,
           id: 1,
@@ -26,6 +29,7 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
           positionY: null,
           time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
         })
+
         setGameName({ name: gameName.name, connect: false, create: false })
         queryListOfGames.doc(gameName.name).set({
           name: gameName.name,
@@ -34,10 +38,11 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
         })
       }
     }
-  }, [gameName.name, gameName.create])
+  }, [gameName.name, gameName.create, currentUser.uid])
 
   const onFinish = ({ game_name }) => {
     const isExist = listOfGamesCollection.some(({ name }) => name === game_name)
+    console.log('game_name onFinish', game_name)
     if (!isExist) {
       setGameName({ name: game_name, connect: false, create: true })
       setError(null)
