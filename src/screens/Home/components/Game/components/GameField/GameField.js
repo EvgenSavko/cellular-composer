@@ -92,6 +92,7 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
     keys.current[e.keyCode] = false
   }
 
+  // Interval (Frame) for actions push buttons
   useEffect(() => {
     // console.log('useEffect ')
     document.addEventListener('keydown', handlePressDown)
@@ -108,6 +109,7 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
     }
   }, [currentPlayer])
 
+  // Interval for sending users package
   useEffect(() => {
     let interval = submitPackageActionCurrentPlayer()
     return () => {

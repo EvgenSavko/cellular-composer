@@ -9,7 +9,7 @@ import { useAuth } from '@Shared/context/AuthContext'
 const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], setGameName, setError, queryGames }) => {
   const { currentUser } = useAuth()
   const formRef = useRef(null)
-  console.log('currentUser1', currentUser)
+
   useEffect(() => {
     if (gameName.name !== 'default' && gameName.create) {
       const { email, uid } = currentUser
@@ -18,8 +18,6 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
 
       const isExist = listOfGamesCollection.some(({ name }) => name === gameName.name)
       if (!isExist && uid && newName) {
-        console.log('uid', uid)
-        console.log('newName', newName)
         queryGames?.doc(uid).set({
           name: newName,
           id: 1,
@@ -61,7 +59,7 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
         <Form.Item
           label="Create game"
           name="game_name"
-          tooltip="Will be your game name!"
+          tooltip="Create name for your game!"
           required
           rules={[
             {

@@ -1,6 +1,7 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect } from 'react'
 
 import { Typography, Button, Spin } from 'antd'
+import gsap from 'gsap'
 
 import CreateGame from './components/CreateGame'
 import ConnectToGame from './components/ConnectToGame'
@@ -25,6 +26,23 @@ const Game = () => {
     logOutOfGame,
     renderModalError,
   } = useGameLogicHook()
+
+  useEffect(() => {
+    console.log('gameName.name', gameName.name)
+    if (gameName.name !== 'default') {
+      gsap.to(`.init-game-wrapper`, { position: 'relative', overflow: 'hidden', height: 160 })
+      gsap.to(`.init-game`, { x: 0, y: 100, position: 'absolute' })
+
+      gsap.to(`.init-game-wrapper`, { height: 60, duration: 1 })
+      gsap.to(`.init-game`, { x: 0, y: 160, duration: 1 })
+    } else {
+      gsap.to(`.init-game-wrapper`, { height: 160, duration: 1 })
+      gsap.to(`.init-game`, { x: 0, y: 0, duration: 1 })
+
+      gsap.to(`.init-game-wrapper`, { position: 'relative', overflow: 'unset', height: 'unset' })
+      gsap.to(`.init-game`, { position: 'relative' })
+    }
+  }, [gameName.name])
 
   return (
     <div className="game">
