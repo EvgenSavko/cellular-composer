@@ -13,10 +13,11 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
   useEffect(() => {
     if (gameName.name !== 'default' && gameName.create) {
       const { email, uid } = currentUser
+
       const newName = email?.substring(0, email.indexOf('@'))
 
       const isExist = listOfGamesCollection.some(({ name }) => name === gameName.name)
-      if (!isExist) {
+      if (!isExist && uid && newName) {
         queryGames?.doc(uid).set({
           name: newName,
           id: 1,
@@ -26,6 +27,7 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
           positionY: null,
           time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
         })
+
         setGameName({ name: gameName.name, connect: false, create: false })
         queryListOfGames.doc(gameName.name).set({
           name: gameName.name,
@@ -34,10 +36,11 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
         })
       }
     }
-  }, [gameName.name, gameName.create])
+  }, [gameName.name, gameName.create, currentUser.uid])
 
   const onFinish = ({ game_name }) => {
     const isExist = listOfGamesCollection.some(({ name }) => name === game_name)
+    console.log('game_name onFinish', game_name)
     if (!isExist) {
       setGameName({ name: game_name, connect: false, create: true })
       setError(null)
@@ -56,7 +59,7 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
         <Form.Item
           label="Create game"
           name="game_name"
-          tooltip="Will be your game name!"
+          tooltip="Create name for your game!"
           required
           rules={[
             {

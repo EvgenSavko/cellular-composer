@@ -72,10 +72,10 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
 
   const submitPackageActionCurrentPlayer = () => {
     return setInterval(function () {
-      console.log('submitPackageActionCurrentPlayer')
+      // console.log('packageActionCurrentPlayer')
 
       if (currentPlayer?.positionX !== localPosition.x || currentPlayer?.positionY !== localPosition.y) {
-        console.log('SUBMIT', localPosition.x)
+        // console.log('SUBMIT', localPosition.x)
         queryGames.doc(uid).update({
           positionX: localPosition.x,
           positionY: localPosition.y,
@@ -85,15 +85,16 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
   }
 
   const handlePressDown = (e) => {
-    console.log('handlePressDown')
+    // console.log('handlePressDown')
     keys.current[e.keyCode] = true
   }
   const handlePressUp = (e) => {
     keys.current[e.keyCode] = false
   }
 
+  // Interval (Frame) for actions push buttons
   useEffect(() => {
-    console.log('useEffect ')
+    // console.log('useEffect ')
     document.addEventListener('keydown', handlePressDown)
     document.addEventListener('keyup', handlePressUp)
 
@@ -101,22 +102,23 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
     if (currentPlayer) interval = handleAction()
 
     return () => {
-      console.log('unmount')
+      // console.log('unmount')
       document.removeEventListener('keydown', handlePressDown)
       document.removeEventListener('keyup', handlePressUp)
       clearInterval(interval)
     }
   }, [currentPlayer])
 
+  // Interval for sending users package
   useEffect(() => {
     let interval = submitPackageActionCurrentPlayer()
     return () => {
-      console.log('unmount 2')
+      // console.log('unmount 2')
       clearInterval(interval)
     }
   }, [currentPlayer])
 
-  console.log('REFRESH')
+  // console.log('REFRESH')
 
   return (
     <div className="game-field">

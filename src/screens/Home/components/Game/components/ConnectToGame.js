@@ -43,7 +43,7 @@ const ConnectToGame = ({ gameName, setGameName, setError, queryGames }) => {
         <Form.Item
           label="Connect to game"
           name="game_name"
-          tooltip="Will be your game name!"
+          tooltip="Enter name of existing game!"
           rules={[
             {
               message: 'Please enter game`s name',
