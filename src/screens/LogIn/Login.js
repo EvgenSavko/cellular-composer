@@ -33,7 +33,7 @@ const Login = () => {
 
   useEffect(() => {
     if (userIN || userCreat) {
-      setCurrentUser(userIN || userCreat)
+      setCurrentUser(userIN.user || userCreat)
       history.push('/')
     }
   }, [userCreat, userIN])
