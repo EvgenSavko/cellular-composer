@@ -28,7 +28,7 @@ const Game = () => {
   } = useGameLogicHook()
 
   useEffect(() => {
-    console.log('gameName.name', gameName.name)
+    // console.log('gameName.name', gameName.name)
     if (gameName.name !== 'default') {
       gsap.to(`.init-game-wrapper`, { position: 'relative', overflow: 'hidden', height: 160 })
       gsap.to(`.init-game`, { x: 0, y: 100, position: 'absolute' })
