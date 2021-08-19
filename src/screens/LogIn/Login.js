@@ -35,6 +35,7 @@ const Login = () => {
   useEffect(() => {
     if (userIN || userCreat) {
       setCurrentUser(userIN.user || userCreat)
+      firebase.analytics().logEvent('notification_received')
       history.push('/')
     }
   }, [userCreat, userIN])
@@ -79,13 +80,16 @@ const Login = () => {
       )}
       {renderModalError()}
       <div className="container">
-        <Radio.Group
-          options={optionsTypes}
-          onChange={(e) => setOption(e.target.value)}
-          value={option}
-          optionType="button"
-          buttonStyle="solid"
-        />
+        <div className="tab-controls">
+          <h2>{option}</h2>
+          <Radio.Group
+            options={optionsTypes}
+            onChange={(e) => setOption(e.target.value)}
+            value={option}
+            optionType="button"
+            buttonStyle="solid"
+          />
+        </div>
 
         <Form name="auth" ref={formRef} onFinish={onFinish} onFinishFailed={onFinishFailed}>
           <Form.Item

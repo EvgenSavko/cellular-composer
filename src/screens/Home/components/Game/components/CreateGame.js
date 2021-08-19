@@ -38,11 +38,12 @@ const CreateGame = ({ gameName, queryListOfGames, listOfGamesCollection = [], se
     }
   }, [gameName.name, gameName.create, currentUser.uid])
 
+  //onFinish - means submit
   const onFinish = ({ game_name }) => {
     const isExist = listOfGamesCollection.some(({ name }) => name === game_name)
-    console.log('game_name onFinish', game_name)
     if (!isExist) {
       setGameName({ name: game_name, connect: false, create: true })
+      firebase.analytics().logEvent('creat_game', { name: game_name })
       setError(null)
     }
     isExist && setError({ name: 'Error', message: `This name is already taken.` })
