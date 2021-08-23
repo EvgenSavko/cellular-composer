@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
 
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import gsap from 'gsap'
+import { ScrollToPlugin } from 'gsap/all'
 
 import { useAuth } from '@Shared/context/AuthContext'
 import firebase from '@Shared/firebase/firebase'
 import ModalError from '@Components/ModalError'
 
+gsap.registerPlugin(ScrollToPlugin)
 const initGame = { name: 'default', create: false, connect: false }
 const LIST_OF_EXISTING_GAMES = 'list_of_existing_games'
 
@@ -77,6 +79,7 @@ const useGameLogicHook = () => {
     setViewTypeGame(e.target.value)
   }
 
+  //Animation of a moving shape that initializes the game
   useEffect(() => {
     // console.log('gameName.name', gameName.name)
     if (gameName.name !== 'default') {
@@ -93,6 +96,20 @@ const useGameLogicHook = () => {
       gsap.to(`.init-game`, { position: 'relative' })
     }
   }, [gameName.name])
+
+  //viewTypeGame
+
+  useEffect(() => {
+    if (gameName.name !== 'default' && viewTypeGame === '3D') {
+      gsap.to(window, 1, {
+        scrollTo: {
+          y: 130,
+          autoKill: true,
+        },
+        ease: 'power2.out',
+      })
+    }
+  }, [gameName.name, viewTypeGame])
 
   return {
     queryListOfGames,

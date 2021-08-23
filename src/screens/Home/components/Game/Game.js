@@ -64,6 +64,7 @@ const Game = () => {
         </div>
       </div>
       {gameName.name !== 'default' && renderViewTypeGame()}
+      {/* <GameField3D /> */}
     </div>
   )
 }
