@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 import gsap from 'gsap'
@@ -14,7 +14,7 @@ const LIST_OF_EXISTING_GAMES = 'list_of_existing_games'
 
 const useGameLogicHook = () => {
   const { currentUser } = useAuth()
-  const [viewTypeGame, setViewTypeGame] = useState('3D')
+  const [viewTypeGame, setViewTypeGame] = useState('2D')
   const [error, setError] = useState(null)
   const [gameName, setGameName] = useState(initGame)
   const queryGames = firebase.firestore().collection(gameName?.name)

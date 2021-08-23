@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 import CreateGame from './components/CreateGame'
 import ConnectToGame from './components/ConnectToGame'
 import GameField from './components/GameField'
-import useGameLogicHook from './useGameLogicHook'
+import useCoreGame from './useCoreGame'
 import GameField3D from './components/GameField3D/GameField3D'
 import TitleBlock from './components/TitleBlock'
 
@@ -24,16 +24,16 @@ const Game = () => {
     logOutOfGame,
     renderModalError,
     handleViewTypeGame,
-  } = useGameLogicHook()
+  } = useCoreGame()
 
   const renderViewTypeGame = () => {
     switch (viewTypeGame) {
       case '2D':
         return <GameField gamesCollection={gamesCollection} loadingGame={loadingGame} queryGames={queryGames} />
       case '3D':
-        return <GameField3D />
+        return <GameField3D handleDeleteGame={handleDeleteGame} />
       default:
-        return <GameField3D />
+        return <GameField3D handleDeleteGame={handleDeleteGame} />
     }
   }
 
