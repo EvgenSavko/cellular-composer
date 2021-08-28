@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import useEscapeHook from '@Shared/hooks/useEscapeHook'
-import useCoreGameField3D from './hook/useCoreGameField3D'
+import useCoreGameField3D from './core/useCoreGameField3D'
 
 const GameField3D = ({ handleDeleteGame }) => {
   useEscapeHook(handleDeleteGame)

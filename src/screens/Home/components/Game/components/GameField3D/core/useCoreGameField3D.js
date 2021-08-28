@@ -1,11 +1,22 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
-import { AxesHelper, Scene, WebGLRenderer } from 'three'
+import { Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { initCamera, initGround, coreAnimation, initHelpers } from './utility'
 
 const useCoreGameField3D = () => {
   const gameDomElement = useRef(null)
+  const [config3D, setConfig3D] = useState(null)
+
+  useEffect(() => {
+    // Animation
+    const animate = () => {
+      requestAnimationFrame(animate)
+      coreAnimation(config3D)
+    }
+
+    config3D && animate()
+  }, [config3D])
 
   useEffect(() => {
     // Scene
@@ -31,12 +42,12 @@ const useCoreGameField3D = () => {
     const axesHelper = initHelpers(scene)
     scene.add(axesHelper)
 
-    // Animation
-    const animate = function () {
-      requestAnimationFrame(animate)
-      coreAnimation({ groundField, controls, renderer, scene, camera })
+    // Collection of models
+    const models = {
+      groundField,
     }
-    animate()
+
+    setConfig3D({ models, controls, renderer, scene, camera })
 
     return () => {
       console.log('unmount 3D Game')

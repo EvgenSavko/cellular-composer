@@ -50,7 +50,7 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
   const keys = useRef({})
 
   const handleAction = () => {
-    return setInterval(function () {
+    return setInterval(() => {
       if (keys.current[UP_KEY]) {
         position.current.y += 10
         setLocalPosition({ ...localPosition, y: (localPosition.y += 10) })
@@ -71,7 +71,7 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
   }
 
   const submitPackageActionCurrentPlayer = () => {
-    return setInterval(function () {
+    return setInterval(() => {
       // console.log('packageActionCurrentPlayer')
 
       if (currentPlayer?.positionX !== localPosition.x || currentPlayer?.positionY !== localPosition.y) {
