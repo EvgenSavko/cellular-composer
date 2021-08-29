@@ -2,114 +2,22 @@ import { useRef, useEffect, useState } from 'react'
 
 import { Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import gsap from 'gsap'
 
-import { initCamera, initGround, coreAnimation, initHelpers, creatPlayer } from './utility'
-import { UP_KEY, DOWN_KEY, LEFT_KEY, RIGHT_KEY } from '@Shared/constants/constants'
+import { useAuth } from '@Shared/context/AuthContext'
+import { initCamera, initGround, coreAnimation, initHelpers, creatPlayer, handleAction } from './utility'
 
-const useCoreGameField3D = () => {
+const useCoreGameField3D = ({ gamesCollection, queryGames }) => {
+  const {
+    currentUser: { uid },
+  } = useAuth()
+
   const gameDomElement = useRef(null)
   const [config3D, setConfig3D] = useState(null)
 
-  const currentPlayer = true // TODO get from Firebase
+  const currentPlayer = gamesCollection?.find((player) => player.uid === uid)
 
   const keys = useRef({})
   const frameId = useRef(null)
-
-  const isMultiAction = (actionsObject) => {
-    const actions = Object.values(actionsObject)
-    return actions.filter(Boolean).length > 1
-  }
-
-  // Handle pushing buttons.
-  const handleAction = () => {
-    return setInterval(() => {
-      const currentPlayer = { ...config3D.models.currentPlayer }
-      const isMulti = isMultiAction(keys.current)
-
-      // Multi moving
-      // UP_KEY RIGHT_KEY
-      if (keys.current[UP_KEY] && keys.current[RIGHT_KEY]) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x + 0.7,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z + 0.7,
-        })
-      }
-
-      // UP_KEY LEFT_KEY
-      if (keys.current[UP_KEY] && keys.current[LEFT_KEY]) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x + 0.7,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z - 0.7,
-        })
-      }
-
-      // DOWN_KEY LEFT_KEY
-      if (keys.current[DOWN_KEY] && keys.current[LEFT_KEY]) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x - 0.7,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z - 0.7,
-        })
-      }
-
-      // DOWN_KEY RIGHT_KEY
-      if (keys.current[DOWN_KEY] && keys.current[RIGHT_KEY]) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x - 0.7,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z + 0.7,
-        })
-      }
-
-      // Single moving
-      // UP_KEY
-      if (keys.current[UP_KEY] && !isMulti) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x + 0.7,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z,
-        })
-      }
-
-      // DOWN_KEY
-      if (keys.current[DOWN_KEY] && !isMulti) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x - 0.7,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z,
-        })
-      }
-
-      // RIGHT_KEY
-      if (keys.current[RIGHT_KEY] && !isMulti) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z + 0.7,
-        })
-      }
-
-      // LEFT_KEY
-      if (keys.current[LEFT_KEY] && !isMulti) {
-        gsap.to(currentPlayer.position, {
-          duration: 0.5,
-          x: currentPlayer.position.x,
-          y: currentPlayer.position.y,
-          z: currentPlayer.position.z - 0.7,
-        })
-      }
-    }, 150) //50
-  }
 
   // Actions buttons.
   const handlePressDown = (e) => {
@@ -126,7 +34,7 @@ const useCoreGameField3D = () => {
 
     let interval
 
-    if (currentPlayer && config3D) interval = handleAction()
+    if (currentPlayer && config3D) interval = handleAction(config3D, keys)
 
     return () => {
       // console.log('unmount keydown keyup')
@@ -174,7 +82,7 @@ const useCoreGameField3D = () => {
     scene.add(groundField)
 
     //Init current player
-    const currentPlayer = creatPlayer({ color: 'red', position: { x: 1 } })
+    const currentPlayer = creatPlayer({ color: 'red', position: { x: 1, y: 1 } })
     scene.add(currentPlayer)
 
     //Axes helper
@@ -194,6 +102,32 @@ const useCoreGameField3D = () => {
       gameDomElement?.current?.removeChild(renderer.domElement)
     }
   }, [])
+
+  const submitPackageActionCurrentPlayer = () => {
+    return setInterval(() => {
+      // console.log('packageActionCurrentPlayer')
+      const currentPlayerLocal = { ...config3D.models.currentPlayer }
+      const x = currentPlayerLocal.position.x
+      const z = currentPlayerLocal.position.z
+      const y = currentPlayerLocal.position.y
+
+      if (currentPlayer?.positionX !== x || currentPlayer?.positionY !== y || currentPlayer?.positionZ !== z) {
+        queryGames.doc(uid).update({
+          positionX: x,
+          positionY: y,
+          positionZ: z,
+        })
+      }
+    }, 300)
+  }
+
+  // Interval for sending users package
+  useEffect(() => {
+    let interval = submitPackageActionCurrentPlayer()
+    return () => {
+      clearInterval(interval)
+    }
+  }, [currentPlayer])
 
   console.log('REFRESH')
 
