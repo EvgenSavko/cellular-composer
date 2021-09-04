@@ -17,7 +17,7 @@ export const handleAction = (config3D, keys) => {
     // UP_KEY RIGHT_KEY
     if (keys.current[UP_KEY] && keys.current[RIGHT_KEY]) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x + 0.7,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z + 0.7,
@@ -27,7 +27,7 @@ export const handleAction = (config3D, keys) => {
     // UP_KEY LEFT_KEY
     if (keys.current[UP_KEY] && keys.current[LEFT_KEY]) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x + 0.7,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z - 0.7,
@@ -37,7 +37,7 @@ export const handleAction = (config3D, keys) => {
     // DOWN_KEY LEFT_KEY
     if (keys.current[DOWN_KEY] && keys.current[LEFT_KEY]) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x - 0.7,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z - 0.7,
@@ -47,7 +47,7 @@ export const handleAction = (config3D, keys) => {
     // DOWN_KEY RIGHT_KEY
     if (keys.current[DOWN_KEY] && keys.current[RIGHT_KEY]) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x - 0.7,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z + 0.7,
@@ -58,7 +58,7 @@ export const handleAction = (config3D, keys) => {
     // UP_KEY
     if (keys.current[UP_KEY] && !isMulti) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x + 0.7,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z,
@@ -68,7 +68,7 @@ export const handleAction = (config3D, keys) => {
     // DOWN_KEY
     if (keys.current[DOWN_KEY] && !isMulti) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x - 0.7,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z,
@@ -78,7 +78,7 @@ export const handleAction = (config3D, keys) => {
     // RIGHT_KEY
     if (keys.current[RIGHT_KEY] && !isMulti) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z + 0.7,
@@ -88,7 +88,7 @@ export const handleAction = (config3D, keys) => {
     // LEFT_KEY
     if (keys.current[LEFT_KEY] && !isMulti) {
       gsap.to(currentPlayer.position, {
-        duration: 0.5,
+        duration: 0.35,
         x: currentPlayer.position.x,
         y: currentPlayer.position.y,
         z: currentPlayer.position.z - 0.7,

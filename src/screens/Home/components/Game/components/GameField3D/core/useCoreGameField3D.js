@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react'
 
 import { Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import gsap from 'gsap'
 
 import { useAuth } from '@Shared/context/AuthContext'
 import { initCamera, initGround, coreAnimation, initHelpers, creatPlayer, handleAction } from './utility'
@@ -95,7 +96,7 @@ const useCoreGameField3D = ({ gamesCollection, queryGames }) => {
       currentPlayer,
     }
 
-    setConfig3D({ models, controls, renderer, scene, camera })
+    setConfig3D({ models, controls, renderer, scene, camera, otherPlayers: {} })
 
     return () => {
       console.log('unmount 3D Game')
@@ -118,7 +119,7 @@ const useCoreGameField3D = ({ gamesCollection, queryGames }) => {
           positionZ: z,
         })
       }
-    }, 300)
+    }, 100)
   }
 
   // Interval for sending users package
@@ -129,7 +130,35 @@ const useCoreGameField3D = ({ gamesCollection, queryGames }) => {
     }
   }, [currentPlayer])
 
-  console.log('REFRESH')
+  useEffect(() => {
+    if (config3D && gamesCollection?.length) {
+      gamesCollection.forEach((user) => {
+        if (user.uid !== uid) {
+          if (!config3D.otherPlayers.hasOwnProperty(user.uid)) {
+            const { scene } = config3D
+            const otherPlayer = creatPlayer({
+              color: 'blue',
+              position: { x: user.positionX || 1, y: user.positionY || 1, z: user.positionZ },
+            })
+            scene.add(otherPlayer)
+
+            setConfig3D({ ...config3D, otherPlayers: { ...config3D.otherPlayers, [user.uid]: otherPlayer } })
+          } else if (config3D.otherPlayers.hasOwnProperty(user.uid)) {
+            gsap.to(config3D.otherPlayers[user.uid].position, {
+              duration: 0.35,
+              x: user.positionX,
+              y: user.positionY,
+              z: user.positionZ,
+            })
+          }
+        }
+      })
+    }
+  }, [gamesCollection])
+
+  // console.log('REFRESH')
+  // console.log('gamesCollection', gamesCollection)
+  // console.log('config3D', config3D)
 
   return { gameDomElement }
 }
