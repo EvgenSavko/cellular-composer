@@ -42,40 +42,31 @@ const GameField = ({ gamesCollection, loadingGame, queryGames }) => {
   const currentPlayer = gamesCollection?.find((player) => player.uid === uid)
 
   const [localPosition, setLocalPosition] = useState({ x: 0, y: 0 })
-  const position = useRef({
-    x: 0,
-    y: 0,
-  })
 
   const keys = useRef({})
 
   const handleAction = () => {
-    return setInterval(function () {
+    return setInterval(() => {
       if (keys.current[UP_KEY]) {
-        position.current.y += 10
         setLocalPosition({ ...localPosition, y: (localPosition.y += 10) })
       }
       if (keys.current[DOWN_KEY]) {
-        position.current.y -= 10
         setLocalPosition({ ...localPosition, y: (localPosition.y -= 10) })
       }
       if (keys.current[RIGHT_KEY]) {
-        position.current.x += 10
         setLocalPosition({ ...localPosition, x: (localPosition.x += 10) })
       }
       if (keys.current[LEFT_KEY]) {
-        position.current.x -= 10
         setLocalPosition({ ...localPosition, x: (localPosition.x -= 10) })
       }
     }, 50)
   }
 
   const submitPackageActionCurrentPlayer = () => {
-    return setInterval(function () {
+    return setInterval(() => {
       // console.log('packageActionCurrentPlayer')
 
       if (currentPlayer?.positionX !== localPosition.x || currentPlayer?.positionY !== localPosition.y) {
-        // console.log('SUBMIT', localPosition.x)
         queryGames.doc(uid).update({
           positionX: localPosition.x,
           positionY: localPosition.y,
