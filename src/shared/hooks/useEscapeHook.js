@@ -2,9 +2,11 @@ import { useEffect } from 'react'
 
 const ESCAPE = 'Escape'
 
-const useEscapeHook = (callBack) => {
-  const handlePressDown = ({ code }) => {
-    if (code === ESCAPE) callBack()
+const useEscapeHook = (callBack, trigger) => {
+  const handlePressDown = async ({ code }) => {
+    if (code === ESCAPE) {
+      await callBack()
+    }
   }
 
   useEffect(() => {
@@ -12,7 +14,7 @@ const useEscapeHook = (callBack) => {
     return () => {
       document.removeEventListener('keydown', handlePressDown)
     }
-  }, [])
+  }, [trigger])
 
   return {}
 }

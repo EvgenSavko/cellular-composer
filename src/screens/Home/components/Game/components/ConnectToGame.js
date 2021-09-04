@@ -21,6 +21,7 @@ const ConnectToGame = ({ gameName, setGameName, setError, queryGames }) => {
         game_creator: false,
         positionX: null,
         positionY: null,
+        positionZ: null,
         time_creat: firebase.firestore.Timestamp.fromDate(new Date()).toDate(),
       })
       setGameName({ name: gameName.name, connect: false, create: false })

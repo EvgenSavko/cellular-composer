@@ -31,9 +31,23 @@ const Game = () => {
       case '2D':
         return <GameField gamesCollection={gamesCollection} loadingGame={loadingGame} queryGames={queryGames} />
       case '3D':
-        return <GameField3D handleDeleteGame={handleDeleteGame} />
+        return (
+          <GameField3D
+            handleDeleteGame={handleDeleteGame}
+            gamesCollection={gamesCollection}
+            loadingGame={loadingGame}
+            queryGames={queryGames}
+          />
+        )
       default:
-        return <GameField3D handleDeleteGame={handleDeleteGame} />
+        return (
+          <GameField3D
+            handleDeleteGame={handleDeleteGame}
+            gamesCollection={gamesCollection}
+            loadingGame={loadingGame}
+            queryGames={queryGames}
+          />
+        )
     }
   }
 
